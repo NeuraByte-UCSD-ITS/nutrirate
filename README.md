@@ -7,7 +7,7 @@ by Edwin Ruiz & Alexa Fernandez Tobias
 
 ## Introduction
 
-As people have become more health concsious over the years, the protein content in the foods we consume has become a popular topic of discussion. Those that are extremely interested in going to the gym and overall fitness seem to obssess over their protein goals and often eat more nutritionally dense, but ultimately less satisfactory meals. On the other hand, the average person not overly-critical of the foods they consume tend to gravitate to lower-protein meals that (objectively) taste better. We wonder if the ratings of high-protein meals recieve lower average ratings because of how they may be associated with nourishing and nutritious, though less appetizing, meals.
+As people have become more health concsious over the years, the protein content in the foods we consume has become a popular topic of discussion. Those that are extremely interested in going to the gym and overall fitness seem to obssess over their protein goals and often eat more nutritionally dense, but ultimately less satisfactory meals. On the other hand, the average person not overly-critical of the foods they consume tend to gravitate to lower-protein meals that (objectively) taste better. We wonder if the ratings of high-protein meals receive lower average ratings because of how they may be associated with nourishing and nutritious, though less appetizing, meals.
 
 **Dataset Overview** 
 This project uses two datasets from Food.com:  
@@ -28,6 +28,7 @@ This project uses two datasets from Food.com:
 | `'ingredients'`    | Text for recipe ingredients                                                                                                                                                                       |
 | `'n_ingredients'`  | Number of ingredients in recipe                                                                                                                                                                   |
 
+
 - **interactions.csv:** contains user reviews and ratings for these recipes. This dataset contains 731927 rows with 5 columns. 
 
 | Column        | Description         |
@@ -38,7 +39,7 @@ This project uses two datasets from Food.com:
 | `'rating'`    | Rating given        |
 | `'review'`    | Review text         |
 
-**Given the datasets, we are investigating whether the nutritional quality (the protein content), is associated with user ratings** After merging the datasets by recipe ID, the resulting data includes nutritional details (extracted from a string column), user ratings, and computed average ratings per recipe. One suggestion is to explicitly define what “high” and “low” protein means (for example, using the median or mean protein value as a cutoff).
+**Given the datasets, we are investigating whether the nutritional quality (the protein content), is associated with user ratings.** After merging the datasets by recipe ID, the resulting data includes nutritional details (extracted from a string column), user ratings, and computed average ratings per recipe. One suggestion is to explicitly define what “high” and “low” protein means (for example, using the median or mean protein value as a cutoff).
 
 To answer this question, we defined “high” and “low” protein recipes:  
 - **High-Protein Recipes:** those with protein values greater than or equal to the median protein content  
@@ -48,25 +49,22 @@ To answer this question, we defined “high” and “low” protein recipes:
 - **Null Hypothesis (H₀):** There is no difference in the average user rating (as measured by the “average_rating” column) between high-protein and low-protein recipes
 - **Alternative Hypothesis (H₁):** High-protein recipes receive significantly lower average ratings than low-protein recipes
 
-**Modeling Context**  
-If we later build a model to predict ratings, the target variable will be **average_rating** (a continuous variable), making this a regression problem.
-
 ---
 
 ## Cleaning and EDA
 
 In order to properly assess our interests we completed the following data cleaning steps:
 
-1. Left merge the datasets with recipes on id and interactions on recipe_id
-    This allows us to see each rating tied with the approriate recipe
+1. Left merge the datasets with recipes on id and interactions on recipe_id.
+    - This allows us to see each rating tied with the approriate recipe
 
-2. Converte the submitted and date columns to datetime datatype
+2. Convert the submitted and date columns to datetime datatype (preference).
 
 3. Replace ratings of 0 with NaN. 
-    Ratings of 0 indicate that someone did not rate the food. In order to avoid a drop in mean ratings, we substitute 0 with NaN which avoids all 0's in future calculations. 
+    - Ratings of 0 indicate that someone did not rate the food. In order to avoid a drop in mean ratings, we substitute 0 with NaN which avoids all 0's in future calculations. 
 
-4. Parse the nutrition column
-    Orignally, this column is a string structured like a list. We convert each nutritional value in the String to a float in order to be able to perform further analysis. 
+4. Split the nutrition column into sub-features.
+    - Orignally, this column is a string structured like a list. We convert each nutritional value in the String to a float in order to be able to perform further analysis. 
 
 5. Concat new float columns created from the nutrition (calories, total_fat, sugar, sodium, protein, saturated_fat, and carbohydrates) column to our merged dataframe.
 
@@ -90,7 +88,8 @@ Here are the first 5 (unique) rows of our cleaned dataset:
 | 2000 meatloaf                        | 475785 |        90 | 2012-03-06 00:00:00 |        5 |                5 |          267   |            12 | False        |    0.0449438 |
 
 
-**Distribution of Recipe Protein Content** 
+**Distribution of Recipe Protein Content:** 
+
 We implemented this plot to get a broader idea of the protein distribution in our merged dataframe. We can see that it is heavily right skewed with only a few recipes going outside of the largest grouped protein. 
 
 <iframe
@@ -100,7 +99,8 @@ We implemented this plot to get a broader idea of the protein distribution in ou
   frameborder="0"
 ></iframe>
 
-**Distribution of Average Recipe Ratings**
+**Distribution of Average Recipe Ratings:**
+
 We implemented this plot to get a broader idea of the average rating per recipe. This plot is heavily left skewed with the mode as 5 stars. We can see people tend to rate recipes generously with very few below 3 stars and a majority around the 4-5 range. 
 
 <iframe
@@ -110,8 +110,9 @@ We implemented this plot to get a broader idea of the average rating per recipe.
   frameborder="0"
 ></iframe>
 
-**Protein vs. Average Rating Scatter Plot** 
-Considering our previous interests in protein content and average ratings, we wanted to further investigate any correlations with a scatter plot. As you can see below, as protein content increases, average rating decreases when looking at the trendline. Though, a majority of the data is from very low protein content that may be skewing our interpretations which is why we plan on conducting further analysis. 
+**Protein vs. Average Rating Scatter Plot:** 
+
+Considering our previous interests in protein content and average ratings, we wanted to further investigate any correlations with a scatter plot. As you can see below, as protein content increases, average rating decreases when looking at the trendline (meaning we found a negative correlation between the two variables). Though, a majority of the data is from very low protein content that may be skewing our interpretations. This is why we plan on conducting further analysis. 
 
 <iframe
   src="assets/protein_vs_average_rating.html"
@@ -124,7 +125,7 @@ Considering our previous interests in protein content and average ratings, we wa
 
 ## Assessment of Missingness
 
-In our dataset the 'rating' column has a large number of missing values (15,036 missing). We gathered that people who have neither an exceptionally great nor exceptionally horrible experience with a recipe are less likely to rate a recipe as they have less of motive to do so. This leads us to believe that the 'rating' is NMAR. 
+In our dataset the 'rating' column has a large number of missing values (15,036 missing). We gathered that people who have neither an exceptionally great nor exceptionally horrible experience with a recipe are less likely to rate a recipe as they have less of motive to do so. This leads us to believe that the 'rating' is NMAR. If it were MAR, the fact that we see so many missing values would purely coincidental with no background information as a motive.
 
 We now investigate whether the missingness of the 'rating' column depends on other features by performing permutation tests on two different variables:
 1. `'protein'` – a feature central to our hypothesis
@@ -139,7 +140,7 @@ By comparing the distributions of these features between rows where 'rating' is 
 
 **Alternate Hypothesis:** The missingness of Rating does depend on the protein amount in the recipe.
 
-**Test Statistic:** The absolute difference of mean in of the recipe of the distribution of the group without missing ratings and the distribution of the group with missing descriptions. 
+**Test Statistic:** The absolute difference in mean of the distribution of the group without missing ratings and the distribution of the group with missing ratings. 
 
 **Significance Level:** 0.05
 
@@ -173,20 +174,22 @@ Since we were also curious if the missingness of ratings was dependent on total 
   frameborder="0"
 ></iframe>
 
-The **observed statistic** of **51.45** is indicated by the red vertical line on the graph. The p-value is above 0.05 (with a permutation test p-value of 0.116) indicating that the missing ratings are not systematically associated with how long a recipe takes to prepare. This suggest with respect to 'minutes', the missingness is independent and likely not driven by preparation time.
+The **observed statistic** of **51.45** is indicated by the red vertical line on the graph. The p-value is above 0.05 (with a permutation test p-value of 0.116) indicating that the missing ratings are not systematically associated with how long a recipe takes to prepare. This means that the missingness of the rating column is not dependent on 'minutes' and is likely not driven by preparation time. 
 
-For our hypothesis, we are comparing average ratings between high-protein and low-protein recipes, thus we need the average_rating value for each recipe and must only drop rows that have missing values in the average_rating column. This will later assure that our hypothesis test (predictive modeling) are based on recipes with complete-meaningful average_ratings.
 ---
 
 ## Hypothesis Testing
+
+For our hypothesis, we are comparing average ratings between high-protein and low-protein recipes, thus we need the average_rating value for each recipe and must only drop rows that have missing values in the average_rating column. This will later assure that our hypothesis test (predictive modeling) are based on recipes with complete-meaningful average_ratings.
 
 Our goal is to see if protein and recipes come from the same population. In order to dive deeper into this relationship, we will perform a one-tailed permutation test with the following information:
 
 - **Null Hypothesis (H₀):** There is no difference in the average user rating (as measured by the average_rating column) between high-protein and low-protein recipes
 - **Alternative Hypothesis (H₁):** High-protein recipes receive significantly lower average ratings than low-protein recipes
 
-**Test Statistic**
-We want to test whether high-protein recipes get lower ratings, so we do a one-tailed, permutation test to test if the mean rating in the high-protein group is lower than the mean rating in the low-protein group. To do this we use the difference in the means of **average_rating** between the two groups as our test statistic. Our reasoning for doing a difference of means is because we want to be able to highlight any directional findings.
+**Test Statistic:**
+
+We want to test whether high-protein recipes get lower ratings, so we do a one-tailed permutation test to see if the mean rating in the high-protein group is lower than the mean rating in the low-protein group. To do this we use the difference in the means of **average_rating** between the two groups as our test statistic. Our reasoning for doing a difference of means is because we want to be able to highlight any directional findings that would not be captured using other test statistics.
 
 **Method**
 - **Observed Difference:** Mean (high-protein ratings) – Mean (low-protein ratings) 
@@ -248,7 +251,6 @@ Seeing as though none of the features included in our model are categorical, we 
   frameborder="0"
 ></iframe>
 
-**Interpretation**
 Since ratings range from 1 to 5, an RMSE of ~0.4898 indicates that on average we’re off by about half a rating point, but it might still be substantial on a 1–5 scale if we aim for high accuracy. An R² near zero (0.0006) means the baseline model-linear regression with these features (in their current form) doesn’t capture much of the underlying complexity in how users rate recipes. In conclusion, this baseline model serves as a benchmark as we should explore more sophisticated approaches as there is definitely room for improvement.
 
 Describe your model and state the features in your model, including how many are quantitative, ordinal, and nominal, and how you performed any necessary encodings. Report the performance of your model and whether or not you believe your current model is “good” and why.
@@ -258,6 +260,8 @@ Describe your model and state the features in your model, including how many are
 To improve this baseline, we added two new engineered features (since we've utilized all previous viable features):
 - **protein_ratio** ratio of protein to calories (captures nutritional density)
 - **sugar_to_carb_ratio:** ratio of sugar to carbohydrates (captures relative sweetness profile)
+
+
 We did this to capture "nutritional quality" as this is the basis of our research and interest. We created protein_ratio because even though we already have individual measurements for protein and calories, combining them into a single ratio allows us to capture the protein denisty of a recipe. A higher protein ratio indicates that a recipe delivers more protein per calorie (which is often seen as a mark of higher nutritional quality and may positively influence ratings). Additionally, we also developed sugar_to_carb_ratio, which is the proportion of total carbohydrates that come from sugar which helps asess the quality of carbohydrate content. In nutritional terms, not all carbohydrates are equal, a meal with a high sugar_to_carb_ratio suggests that a larger portion of its carbs consists of simple sugars rather than complex carbs. Since a high simple sugar ratio can be percieved as 'unhealthy', we believe they may negatively impact ratings and thus our reasoning for including it in our final model. 
 
 We then used a **RandomForestRegressor** - a non-linear ensemble method that can capture complex interactions. We tuned key hyperparameters using **GrindSearchCV** and evaluation is done using the same metrics: RMSE, MAE, and R² (again with RMSE being our main metric).
@@ -287,7 +291,7 @@ Compared to our baseline model, we see a dramatic difference in accuracy with pr
 | **Stacking Ensemble (Post-Final)** | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, StackingRegressor with base models: RandomForestRegressor & GradientBoostingRegressor; meta: Ridge   | 0.3384   | 0.1494   | 0.5228   |
 
 <iframe
-  src="assets/final_pred_vs_actual.html"
+  src="assets/residual_plots.html"
   width="800"
   height="600"
   frameborder="0"
