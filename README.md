@@ -126,13 +126,14 @@ Considering our previous interests in protein content and average ratings, we wa
 
 ## Assessment of Missingness
 
-- In our dataset the 'rating' column has a large number of missing values (15,036 missing). We gathered that people who have neither an exceptionally great nor exceptionally horrible experience with a recipe are less likely to rate a recipe as they have less incentives to do so. This leads us to believe that this column is NMAR 
+In our dataset the 'rating' column has a large number of missing values (15,036 missing). We gathered that people who have neither an exceptionally great nor exceptionally horrible experience with a recipe are less likely to rate a recipe as they have less of motive to do so. This leads us to believe that the 'rating' is NMAR. 
 
 We now investigate whether the missingness of the 'rating' column depends on other features by performing permutation tests on two different variables:
 1. `'protein'` – a feature central to our hypothesis
 2. `'minutes'` – a feature (priori) that we expect may not influence the decision to leave a rating
 
 By comparing the distributions of these features between rows where 'rating' is missing and where it is not, we can assess if the missingness is systematically related to them.
+
 
 > Protein and Ratings
 
@@ -144,23 +145,16 @@ By comparing the distributions of these features between rows where 'rating' is 
 
 **Significance Level:** 0.05
 
+We collected 1000 simulated mean differences between the two distriubutions by running a permutation test. This involved shuffling the missingness of rating 1000 times.
+
 <iframe
-  src="assets/distr_rating_sugar.html"
+  src="assets/permutation_test_protein.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
 
-We ran a permutation test by shuffling the missingness of rating for 1000 times to collect 1000 simulating mean differences in the two distributions as described in the test statistic.
-
-<iframe
-  src="assets/empirical_diff_sugar.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
-
-The **observed statistic** of **2.85** is indicated by the red vertical line on the graph. Since the **p_value** that we found **(0.0)** is < 0.05 which is the significance level that we set, we **reject the null hypothesis**. The missingness of `'rating'` does depend on the `'protein'` which suggests a MAR relationship between the two variables.
+The **observed statistic** of **2.85** is indicated by the red vertical line on the graph. Since the **p_value** that we found **(0.0)** is < 0.05 (significance level), we **reject the null hypothesis** and accept the alternative. Therefore, we conclude that `'rating'` is MAR, conditional on `'protein'`.
 
 > Minutes and Rating
 
@@ -172,62 +166,121 @@ The **observed statistic** of **2.85** is indicated by the red vertical line on 
 
 **Significance Level:** 0.05
 
+Since we were also curious if the missingness of ratings was dependent on total preparation time (our minutes column), we again collected 1000 simulated mean differences between the two distriubutions by running a permutation test.
+
 <iframe
-  src="assets/empirical_diff_prescale.html"
+  src="assets/permutation_test_minutes.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
 
-Due to the outliers in cooking time, it is difficult to identify the shapes of the two distributions, so we update the scale to take a closer look.
+The **observed statistic** of **51.45** is indicated by the red vertical line on the graph. The p-value is above 0.05 (with a permutation test p-value of 0.116) indicating that the missing ratings are not systematically associated with how long a recipe takes to prepare. This suggest with respect to 'minutes', the missingness is independent and likely not driven by preparation time.
 
-<iframe
-  src="assets/distr_rating_minutes.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
-
-We ran another permutation test by shuffling the missingness of rating for 1000 times to collect 1000 simulating mean differences in the two distributions as described in the test statistic.
-
-<iframe
-  src="assets/empirical_diff_minutes.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
-
-The **observed statistic** of **51.4524** is indicated by the red vertical line on the graph. Since the **p-value** that we found **(0.123)** is > 0.05 which is the significance level that we set, we **fail to reject the null hypothesis**. The missingness of rating does not depend on the cooking time in minutes of the recipe.
-
-
-| Quarter     |   Count |
-|:------------|--------:|
-| Fall 2020   |       3 |
-| Winter 2021 |       2 |
-| Spring 2021 |       6 |
-| Summer 2021 |       4 |
-| Fall 2021   |      55 |
-
+For our hypothesis, we are comparing average ratings between high-protein and low-protein recipes, thus we need the average_rating value for each recipe and must only drop rows that have missing values in the average_rating column. This will later assure that our hypothesis test (predictive modeling) are based on recipes with complete-meaningful average_ratings.
 ---
 
 ## Hypothesis Testing
 
-In order to dive deeper into the relationship between protein content and recipes, we will perform a permuttion test with the following information:
+Our goal is to see if protein and recipes come from the same population. In order to dive deeper into this relationship, we will perform a one-tailed permutation test with the following information:
 
-- **Null Hypothesis (H₀):** There is no difference in the average user rating (as measured by the “average_rating” column) between high-protein and low-protein recipes
+- **Null Hypothesis (H₀):** There is no difference in the average user rating (as measured by the average_rating column) between high-protein and low-protein recipes
 - **Alternative Hypothesis (H₁):** High-protein recipes receive significantly lower average ratings than low-protein recipes
 
 **Test Statistic**
-
-We want to test whether high-protein recipes get lower ratings, so we do a one-tailed, permutation test to test if the mean rating in the high-protein group is lower than the mean rating in the low-protein group. To do this we use th e difference in the means of **average_rating** between the two groups as our test statistic. Our reasoning for doing a difference of means is because we want to be able to highlight any directional findings.
+We want to test whether high-protein recipes get lower ratings, so we do a one-tailed, permutation test to test if the mean rating in the high-protein group is lower than the mean rating in the low-protein group. To do this we use the difference in the means of **average_rating** between the two groups as our test statistic. Our reasoning for doing a difference of means is because we want to be able to highlight any directional findings.
 
 **Method**
 - **Observed Difference:** Mean (high-protein ratings) – Mean (low-protein ratings) 
-- **Permutation Procedure:** we will randomly shuffle the protein-group labels many times (1,000 permutations) and recalculate the difference each time to build an empirical distribution
-- **P-value:** we will calculate the p-value as the proportion of permuted differences that are less than or equal to the observed difference (if the observed difference is negative). 
+- **Permutation Procedure:** We will randomly shuffle the protein-group labels many times (1,000 permutations) and recalculate the difference each time to build an empirical distribution. 
+- **P-value:** We will calculate the p-value as the proportion of permuted differences that are less than or equal to the observed difference (if the observed difference is negative). 
 
-Our goal is to see if protein and recipes come from the same population, thus our reasoning for performing a permutation test. 
-
-After performing the permutation test, we reached an observed difference of -0.02 and accepted the null hypothesis.
+After performing the permutation test, we reached an observed difference of -0.01699 and a test p-value of 0.0. This leads us to reject the null hypothesis and accept the alternative. 
 
 ## Framing a Prediction Problem
+
+In this section we plan on predicting the continuous variable average_rating for each recipe using the appropriate and available features we have on hand (and at the time of recipe submission). We will treat this as a regression problem seeing as though average_rating ranges approximately from 1-5. 
+
+Our selected features are:
+- nutritional values: calories, total_fat, sodium, protein, saturated_fat, and carbohydrates. 
+    From our previous analysis we found that protein is correlated with user ratings which suggests other nutrtional factors may also play a role. 
+- recipe properties: minutes, n_steps, and n_ingriedients.
+    These features may influence how people may perceive or rate a recipe (e.g., ease of preparation, gathering of ingridients)
+Our reasoning for not selecting columns such as rating or review is because that is not information we would not have on hand if a rating was yet to be made. All the features we selected is information we would have whether or not someone has already left a rating. 
+
+**Evaluation Metrics** 
+We used the following metrics to measure our progress:
+   - **RMSE (Root Mean Squared Error):** Emphasizes large errors by squaring them before averaging, thus giving a sense of how off the model can be in “worst-case” scenarios  
+   - **MAE (Mean Absolute Error):** Straightforward measure of average absolute deviation from true ratings  
+   - **R² (Coefficient of Determination):** Indicates how much of the variance in average ratings is explained by the features
+Though our main metric is **RMSE** as ...
+
+**Why This Matters**
+- Predicting **average_rating** can guide recipe creators to design or modify recipes that are more likely to garner higher user satisfaction. It also builds upon the earlier hypothesis test that showed a slight negative relationship between high protein and ratings.
+
+Moving forward, we wanted to visualize correlations between the features and the target using a correlation matrix. 
+
+<iframe
+  src="assets/correlation_matrix.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+From the correlation matrix, we see that many of the nutritional features (e.g., calories, total_fat, sugar, and carbohydrates) are highly correlated with one another, whereas average_rating does not show a strong linear correlation with any single feature. This entails that a straightforward linear model might not be sufficient to capture how these recipe attributes affect user ratings, which suggests that we need more advanced modeling and feature engineering.
+
+## Baseline Model
+
+Baseline Approach:
+- model: Linear Regression
+- Data Processing: Appeal **StandardScaler** to all numeric features.
+- Data Split: 80% training, 20% test, ensuring we can asses generalization
+For our features, we decided to use all nutritional values and recipe properties previously mentioned. These all consist of quantitative values: calories (continuous), total_fat (continuous), sugar (continuous), sodium (continuous), protein (continuous), saturated_fat (continuous), carbohydrates (continuous), minutes (continuous), n_steps (discrete), n_ingridients (discrete)
+Seeing as though none of the features included in our model are categorical, we did not have to perform any encodings.
+
+**Baseline Performance Results**  
+- **RMSE:** ~0.4898  
+- **MAE:** ~0.3398  
+- **R²:** ~0.0006  
+
+<iframe
+  src="assets/baseline_pred_vs_actual.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+**Interpretation**
+Since ratings range from 1 to 5, an RMSE of ~0.4898 indicates that on average we’re off by about half a rating point, but it might still be substantial on a 1–5 scale if we aim for high accuracy. An R² near zero (0.0006) means the baseline model-linear regression with these features (in their current form) doesn’t capture much of the underlying complexity in how users rate recipes. In conclusion, this baseline model serves as a benchmark as we should explore more sophisticated approaches as there is definitely room for improvement.
+
+Describe your model and state the features in your model, including how many are quantitative, ordinal, and nominal, and how you performed any necessary encodings. Report the performance of your model and whether or not you believe your current model is “good” and why.
+
+## Final Model
+
+To improve this baseline, we added two new engineered features:
+- **protein_ratio** ratio of protein to calories (captures nutritional density)
+- **sugar_to_carb_ratio:** ratio of sugar to carbohydrates (captures relative sweetness profile)
+
+We then used a **RandomForestRegressor** - a non-linear ensemble method that can capture complex interactions. We tuned key hyperparameters using **GrindSearchCV** and evaluation is done using the same metrics: RMSE, MAE, and R² (again with RMSE being our main metric).
+
+Final model training set size: 185321 rows
+Final model test set size: 46331 rows
+Best hyperparameters: {'model__max_depth': None, 'model__n_estimators': 100}
+
+Final Model Performance:
+RMSE: 0.3400
+MAE: 0.1442
+R²: 0.5183
+
+<iframe
+  src="assets/final_pred_vs_actual.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+| **Model**                         | **Features Used**                                                                                           | **Method/Transformations**                                                                                         | **RMSE** | **MAE**  | **R²**   |
+|-----------------------------------|-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|----------|----------|----------|
+| **Baseline Model**                      | calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates, minutes, n_steps, n_ingredients    | StandardScaler, Linear Regression                                                                                  | 0.4898   | 0.3398   | 0.0006   |
+| **Final Model (RandomForest)**    | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, RandomForestRegressor (max_depth: None, n_estimators: 100) with GridSearchCV                         | 0.3400   | 0.1442   | 0.5183   |
+| **Stacking Ensemble (Post-Final)** | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, StackingRegressor with base models: RandomForestRegressor & GradientBoostingRegressor; meta: Ridge   | 0.3384   | 0.1494   | 0.5228   |
