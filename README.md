@@ -55,8 +55,6 @@ If we later build a model to predict ratings, the target variable will be **aver
 
 ## Cleaning and EDA
 
-<iframe src="assets/10-80-enrollment.html" width=800 height=600 frameBorder=0></iframe>
-
 In order to properly assess our interests we completed the following data cleaning steps:
 
 1. Left merge the datasets with recipes on id and interactions on recipe_id
@@ -257,9 +255,10 @@ Describe your model and state the features in your model, including how many are
 
 ## Final Model
 
-To improve this baseline, we added two new engineered features:
+To improve this baseline, we added two new engineered features (since we've utilized all previous viable features):
 - **protein_ratio** ratio of protein to calories (captures nutritional density)
 - **sugar_to_carb_ratio:** ratio of sugar to carbohydrates (captures relative sweetness profile)
+We did this to capture "nutritional quality" as this is the basis of our research and interest. We created protein_ratio because even though we already have individual measurements for protein and calories, combining them into a single ratio allows us to capture the protein denisty of a recipe. A higher protein ratio indicates that a recipe delivers more protein per calorie (which is often seen as a mark of higher nutritional quality and may positively influence ratings). Additionally, we also developed sugar_to_carb_ratio, which is the proportion of total carbohydrates that come from sugar which helps asess the quality of carbohydrate content. In nutritional terms, not all carbohydrates are equal, a meal with a high sugar_to_carb_ratio suggests that a larger portion of its carbs consists of simple sugars rather than complex carbs. Since a high simple sugar ratio can be percieved as 'unhealthy', we believe they may negatively impact ratings and thus our reasoning for including it in our final model. 
 
 We then used a **RandomForestRegressor** - a non-linear ensemble method that can capture complex interactions. We tuned key hyperparameters using **GrindSearchCV** and evaluation is done using the same metrics: RMSE, MAE, and R² (again with RMSE being our main metric).
 
@@ -279,8 +278,25 @@ R²: 0.5183
   frameborder="0"
 ></iframe>
 
+Compared to our baseline model, we see a dramatic difference in accuracy with predicting ratings. 
+
 | **Model**                         | **Features Used**                                                                                           | **Method/Transformations**                                                                                         | **RMSE** | **MAE**  | **R²**   |
 |-----------------------------------|-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|----------|----------|----------|
 | **Baseline Model**                      | calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates, minutes, n_steps, n_ingredients    | StandardScaler, Linear Regression                                                                                  | 0.4898   | 0.3398   | 0.0006   |
 | **Final Model (RandomForest)**    | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, RandomForestRegressor (max_depth: None, n_estimators: 100) with GridSearchCV                         | 0.3400   | 0.1442   | 0.5183   |
 | **Stacking Ensemble (Post-Final)** | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, StackingRegressor with base models: RandomForestRegressor & GradientBoostingRegressor; meta: Ridge   | 0.3384   | 0.1494   | 0.5228   |
+
+<iframe
+  src="assets/final_pred_vs_actual.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+**Conclusion**
+
+Our analysis set out to determine whether nutritional quality, specifically protein content, is associated with user ratings on Food.com. We began by comparing high‐protein and low‐protein recipes using a permutation test, which rejected the null hypothesis (p-value = 0.0) where we were able to see a trend of high-protein receiving slightly lower ratings. Although the absolute difference in ratings was modest, this finding provided the rational for further predictive modeling. We first began by building a baseline Linear Regression model using 10 core nutritional and recipe features that yielded an RMSE of 0.4898, an MAE of 0.2298, and an R² near zero. This implied that a simple linear approach could not capture the complex factors influencing user ratings. 
+
+We then enhanced our feature set by engineering two new variables—protein_ratio (protein/calories) and sugar_to_carb_ratio (sugar/carbohydrates), and applied a RandomForestRegressor, which substantially improved performance (RMSE: 0.3400, MAE: 0.1442, R²: 0.5183). To explore further enhancements, we implemented a stacking ensemble that combined predictions from RandomForest and Gradient Boosting regressors with a Ridge regressor as the meta-model. The stacking ensemble achieved a slightly better RMSE of 0.3384 and an R² of 0.5228, though its MAE was marginally higher (0.1494). In practical terms, the difference between the RandomForest model and the stacking ensemble is very small—only about a 0.0016 improvement in RMSE and a 0.0045 increase in R². This indicates that both advanced models perform almost equivalently. 
+
+Overall, our results strongly suggest that protein content is a significant factor associated with user ratings; the incorporation of protein-derived features into non-linear models improves predictive accuracy considerably, explaining over 50% of the variance in ratings. While the stacking ensemble offers a minor edge, the increased complexity may not be justified if simplicity and interpretability are prioritized.
