@@ -346,6 +346,7 @@ Overall, our results strongly suggest that protein content is a significant fact
 
 To assess if our final RandomForest model performs “fairly” across the attributes we are testing the variable: 
 - **Preparation Time** (short vs. long)
+
 We chose this variable because while most of our analysis was focused on nutritional value, one's rating may be largely influenced by how long it takes to prepare. Longer recipes may be more intricate and therefore more enjoyable than the average recipe.
 
 We computed the RMSE and performed a **permutation test** to see if any observed difference in RMSE is statistically significant. We used the difference in RMSE as our test statistic and set our significance level at alpha = 0.05. Our reasoning for using RMSE is because of how it measures the average prediction error in the same units as the target variable allowing us to highlight any potential bias.
