@@ -273,7 +273,7 @@ Seeing as though none of the features included in our model are categorical (and
 - **MAE:** ~0.3398  
 - **R²:** ~0.0006  
 
-This scatter plot shows the predicted average ratings from our baseline Linear Regression model against the actual ratings. The points are widely scattered around the ideal y=x line, indicating that the baseline model struggles to capture the complex relationship between the features and user ratings. This visualization confirms that our simple linear approach provides limited predictive power.
+This scatter plot shows the predicted average ratings from our baseline Linear Regression model against the actual ratings. The points are widely scattered around the ideal y=x line. This shows that the baseline model struggles to capture the complex relationship between the features and average user ratings.
 
 <iframe
   src="assets/baseline_pred_vs_actual.html"
@@ -281,7 +281,6 @@ This scatter plot shows the predicted average ratings from our baseline Linear R
   height="600"
   frameborder="0"
 ></iframe>
-
 
 Since ratings range from 1 to 5, an RMSE of ~0.4898 indicates that on average we’re off by about half a rating point, but it might still be substantial on a 1–5 scale if we aim for high accuracy. An R² near zero (0.0006) means the baseline model-linear regression with these features (in their current form) doesn’t capture much of the underlying complexity in how users rate recipes. This might be due to non-linear interactions between nutritional content and user preferences that linear regression cannot model well. In conclusion, this baseline model serves as a benchmark; we should explore more sophisticated approaches since there is definitely room for improvement.
 
@@ -313,7 +312,7 @@ MAE: 0.1442
 
 R²: 0.5183
 
-This plot displays the predictions from our final RandomForest model compared to the actual average ratings. The predictions align much more closely with the ideal line, reflecting a substantial improvement in performance over the baseline model. The reduced scatter suggests that the advanced, non-linear model with engineered features captures key factors influencing user ratings more effectively.
+This plot displays the predictions from our final RandomForest model compared to the actual average ratings. Compared to our original, these predictions fall closer to the ideal line (implying progress).
 
 <iframe
   src="assets/final_pred_vs_actual.html"
@@ -330,7 +329,7 @@ Compared to our baseline model, we see a dramatic difference in accuracy with pr
 | **Final Model (RandomForest)**    | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, RandomForestRegressor (max_depth: None, n_estimators: 100) with GridSearchCV                         | 0.3400   | 0.1442   | 0.5183   |
 | **Stacking Ensemble (Post-Final)** | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, StackingRegressor with base models: RandomForestRegressor & GradientBoostingRegressor; meta: Ridge   | 0.3384   | 0.1494   | 0.5228   |
 
-The residual plots for the baseline, final, and stacking models illustrate the distribution of prediction errors for each approach. The final model and stacking ensemble exhibit much narrower and more centered residual distributions compared to the baseline, indicating lower and more consistent errors. This comparison highlights the improvement in model accuracy achieved through feature engineering and the use of non-linear ensemble techniques.
+The residual plots for the baseline, final, and stacking models illustrate the distribution of prediction errors for each approach. The baseline model shows more errors compared to the final model and stacking ensemble as those are much more narrow.
 
 <iframe
   src="assets/residual_plots.html"
