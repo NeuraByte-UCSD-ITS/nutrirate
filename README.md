@@ -66,6 +66,8 @@ In order to properly assess our interests we completed the following data cleani
 
 6. Grouping by recipe id, we computed the average rating per recipe using our merged data. We then merged the resulting dataframe with the original merged_df to add 'average_ratings' as a new column.
 
+Here are the first 5 (unique) rows of our cleaned dataset:
+
 
 | name                                 | minutes | nutrition                                    | description                                          | rating | calories | protein |
 |:-------------------------------------|--------:|:---------------------------------------------|:-----------------------------------------------------|-------:|---------:|--------:|
