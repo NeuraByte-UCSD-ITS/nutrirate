@@ -273,6 +273,8 @@ Seeing as though none of the features included in our model are categorical (and
 - **MAE:** ~0.3398  
 - **R²:** ~0.0006  
 
+This scatter plot shows the predicted average ratings from our baseline Linear Regression model against the actual ratings. The points are widely scattered around the ideal y=x line, indicating that the baseline model struggles to capture the complex relationship between the features and user ratings. This visualization confirms that our simple linear approach provides limited predictive power.
+
 <iframe
   src="assets/baseline_pred_vs_actual.html"
   width="800"
@@ -311,6 +313,8 @@ MAE: 0.1442
 
 R²: 0.5183
 
+This plot displays the predictions from our final RandomForest model compared to the actual average ratings. The predictions align much more closely with the ideal line, reflecting a substantial improvement in performance over the baseline model. The reduced scatter suggests that the advanced, non-linear model with engineered features captures key factors influencing user ratings more effectively.
+
 <iframe
   src="assets/final_pred_vs_actual.html"
   width="800"
@@ -325,6 +329,8 @@ Compared to our baseline model, we see a dramatic difference in accuracy with pr
 | **Baseline Model**                      | calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates, minutes, n_steps, n_ingredients    | StandardScaler, Linear Regression                                                                                  | 0.4898   | 0.3398   | 0.0006   |
 | **Final Model (RandomForest)**    | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, RandomForestRegressor (max_depth: None, n_estimators: 100) with GridSearchCV                         | 0.3400   | 0.1442   | 0.5183   |
 | **Stacking Ensemble (Post-Final)** | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, StackingRegressor with base models: RandomForestRegressor & GradientBoostingRegressor; meta: Ridge   | 0.3384   | 0.1494   | 0.5228   |
+
+The residual plots for the baseline, final, and stacking models illustrate the distribution of prediction errors for each approach. The final model and stacking ensemble exhibit much narrower and more centered residual distributions compared to the baseline, indicating lower and more consistent errors. This comparison highlights the improvement in model accuracy achieved through feature engineering and the use of non-linear ensemble techniques.
 
 <iframe
   src="assets/residual_plots.html"
