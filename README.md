@@ -304,15 +304,13 @@ We tuned key hyperparameters using **GridSearchCV** and evaluation is done using
 
 **Best hyperparameters:** {'model__max_depth': None, 'model__n_estimators': 100}
 
-Final Model Performance:
+**Final Model Performance:**
 
-RMSE: 0.3400
+- RMSE: 0.3400
+- MAE: 0.1442
+- R²: 0.5183
 
-MAE: 0.1442
-
-R²: 0.5183
-
-This plot displays the predictions from our final RandomForest model compared to the actual average ratings. Compared to our original, these predictions fall closer to the ideal line (implying progress).
+This plot displays the predictions from our final RandomForest model compared to the actual average ratings. Compared to our baseline model, these predictions fall closer to the ideal line (difference in accuracy with predicting ratings).
 
 <iframe
   src="assets/final_pred_vs_actual.html"
@@ -321,15 +319,13 @@ This plot displays the predictions from our final RandomForest model compared to
   frameborder="0"
 ></iframe>
 
-Compared to our baseline model, we see a dramatic difference in accuracy with predicting ratings. 
-
 | **Model**                         | **Features Used**                                                                                           | **Method/Transformations**                                                                                         | **RMSE** | **MAE**  | **R²**   |
 |-----------------------------------|-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|----------|----------|----------|
 | **Baseline Model**                      | calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates, minutes, n_steps, n_ingredients    | StandardScaler, Linear Regression                                                                                  | 0.4898   | 0.3398   | 0.0006   |
 | **Final Model (RandomForest)**    | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, RandomForestRegressor (max_depth: None, n_estimators: 100) with GridSearchCV                         | 0.3400   | 0.1442   | 0.5183   |
 | **Two-Layer Stacked Model (RandomForest + GradientBoosting + Ridge)** | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, StackingRegressor with base models: RandomForestRegressor & GradientBoostingRegressor; meta: Ridge   | 0.3384   | 0.1494   | 0.5228   |
 
-The residual plots for the baseline, final, and stacking models illustrate the distribution of prediction errors for each approach. The baseline model shows more errors compared to the final model and stacking ensemble as those are much more narrow.
+The residual plots for the baseline, final, and two-layer stacked model illustrate the distribution of prediction errors for each approach. The baseline model shows more errors compared to the final model and stacking ensemble as those are much more narrow.
 
 <iframe
   src="assets/residual_plots.html"
@@ -348,7 +344,9 @@ Overall, our results strongly suggest that protein content is a significant fact
 
 ## Fairness Analysis
 
-To assess if our final RandomForest model performs “fairly” across the attributes we are testing the variable: **Preparation Time** (short vs. long). We chose this variable because while most of our analysis was focused on nutritional value, one's rating may be largely influenced by how long it takes to prepare. Longer recipes may be more intricate and therefore more enjoyable than the average recipe.
+To assess if our final RandomForest model performs “fairly” across the attributes we are testing the variable: 
+- **Preparation Time** (short vs. long)
+We chose this variable because while most of our analysis was focused on nutritional value, one's rating may be largely influenced by how long it takes to prepare. Longer recipes may be more intricate and therefore more enjoyable than the average recipe.
 
 We computed the RMSE and performed a **permutation test** to see if any observed difference in RMSE is statistically significant. We used the difference in RMSE as our test statistic and set our significance level at alpha = 0.05. Our reasoning for using RMSE is because of how it measures the average prediction error in the same units as the target variable allowing us to highlight any potential bias.
 
