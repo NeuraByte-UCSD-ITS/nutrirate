@@ -30,7 +30,8 @@ We used two datasets from Food.com:
 | `'n_ingredients'`  | Number of ingredients in recipe                                                                                                                                                                   |
 
 
-- **interactions.csv:** contains user reviews and ratings for these recipes. This dataset contains 731927 rows with 5 columns. 
+
+- **interactions.csv:** contains user reviews and ratings for these recipes. This dataset contains 731927 rows with 5 columns 
 
 | Column        | Description         |
 | :------------ | :------------------ |
