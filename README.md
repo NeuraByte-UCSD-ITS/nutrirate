@@ -131,12 +131,14 @@ Our pivot table is the results of grouping the recipes by their protein group (h
 
 ## Assessment of Missingness
 
+### NMAR Analysis (Qualitative Reasoning)
 In our dataset the 'rating' column has a large number of missing values (15,036 missing). We gathered that people who have neither an exceptionally great nor exceptionally horrible experience (a neutral experience) with a recipe are less likely to rate a recipe as they have less of motive to do so. In other words, whether a person rates a recipe may depend on their subjective experience, which is unobserved in the dataset. This leads us to believe that the 'rating' might be NMAR. If it were MCAR, the fact that we see so many missing values would purely coincidental with no background information as a motive.
 
 However, to determine whether missingness might instead be MAR, we investigate whther the missingness in 'rating' depends on observed features in the dataset. Specifically, we performed a permutation tests on two different variables:
 1. `'protein'` – a feature central to our hypothesis
 2. `'minutes'` – a feature (priori) that we expect may not influence the decision to leave a rating
 
+### Missingness Dependency
 By comparing the distributions of these features between rows where 'rating' is missing and where it is not, we can assess if the missingness is systematically related to them.
 
 
@@ -198,7 +200,8 @@ Our goal is to see if protein and recipes come from the same population. In orde
 We want to test whether high-protein recipes get lower ratings, so we do a one-tailed permutation test to see if the mean rating in the high-protein group is lower than the mean rating in the low-protein group. To do this we use the difference in the means of **average_rating** between the two groups as our test statistic. Our reasoning for doing a difference of means is because we want to be able to highlight any directional findings that would not be captured using other test statistics.
 
 **Method**
-- **Observed Difference:** Mean (high-protein ratings) – Mean (low-protein ratings) 
+- **Observed Difference:** Mean (high-protein ratings) – Mean (low-protein ratings)
+   - Mean over median was the better method choice because the mean reflects the impact of all rating values, including outliers, which is crucial for capturing the subtle differences central to our hypothesis, whereas the median only reflects the central tendency and obscures these variations by ignoring the extremes.  
 - **Permutation Procedure:** We will randomly shuffle the protein-group labels many times (1,000 permutations) and recalculate the difference each time to build an empirical distribution. 
 - **P-value:** We will calculate the p-value as the proportion of permuted differences that are less than or equal to the observed difference (if the observed difference is negative). 
 
