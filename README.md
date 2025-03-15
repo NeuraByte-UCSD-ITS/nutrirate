@@ -92,7 +92,7 @@ We implemented this plot to get a broader idea of the protein distribution in ou
 
 **Distribution of Average Recipe Ratings:**
 
-We implemented this plot to get a broader idea of the average rating per recipe. This plot is heavily left skewed with the mode as 5 stars. We can see people tend to rate recipes generously with very few below 3 stars and a majority around the 4-5 range. 
+We implemented this plot to get a broader idea of the average rating per recipe. This plot is heavily left skewed with the mode as 5 stars. We can see people tend to rate recipes generously with very few below 3 stars and the majority around the 4-5 range. 
 
 <iframe
   src="assets/average_rating_distribution.html"
@@ -111,6 +111,12 @@ Considering our previous interests in protein content and average ratings, we wa
   height="600"
   frameborder="0"
 ></iframe>
+
+Pivot Table: Mean Average Rating by Protein Group & Preparation Time (bin):
+| protein_group   |   short |   medium |    long |
+|:----------------|--------:|---------:|--------:|
+| high            | 4.68556 |  4.67607 | 4.64813 |
+| low             | 4.7073  |  4.65943 | 4.67475 |
 
 ---
 
