@@ -81,13 +81,14 @@ Univariate Analysis
 
 
 Here are the first 5 (unique) rows of our cleaned dataset:
-| name                                  | minutes | nutrition                                       | description                                           | rating | calories | protein |
-|---------------------------------------|---------|-------------------------------------------------|-------------------------------------------------------|--------|----------|---------|
-| 1 brownies in the world best ever     | 40      | [138.4, 10.0, 50.0, 3.0, 3.0, 19.0, 6.0]        | these are the most; chocolatey, moist, rich, d...     | 4.0    | 138.4    | 3.0     |
-| 1 in canada chocolate chip cookies    | 45      | [595.1, 46.0, 211.0, 22.0, 13.0, 51.0, 26.0]    | this is the recipe that we use at my school ca...     | 5.0    | 595.1    | 13.0    |
-| 412 broccoli casserole                | 40      | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]       | since there are already 411 recipes for brocco...     | 5.0    | 194.8    | 22.0    |
-| millionaire pound cake                | 120     | [878.3, 63.0, 326.0, 13.0, 20.0, 123.0, 39.0]   | why a millionaire pound cake? because it's su...      | 5.0    | 878.3    | 20.0    |
-| 2000 meatloaf                         | 90      | [267.0, 30.0, 12.0, 12.0, 29.0, 48.0, 2.0]      | ready, set, cook! special edition contest entr...     | 5.0    | 267.0    | 29.0    |
+| Name                                  | Minutes | Nutrition                                      | Description                                           | Rating | Calories | Protein |
+|:--------------------------------------|--------:|:-----------------------------------------------|:------------------------------------------------------|-------:|---------:|--------:|
+| 1 brownies in the world best ever     |      40 | [138.4, 10.0, 50.0, 3.0, 3.0, 19.0, 6.0]       | These are the most chocolatey, moist, rich brownies.  |    4.0 |    138.4 |     3.0 |
+| 1 in Canada chocolate chip cookies    |      45 | [595.1, 46.0, 211.0, 22.0, 13.0, 51.0, 26.0]   | This is the recipe that we use at my school cafeteria.|    5.0 |    595.1 |    13.0 |
+| 412 broccoli casserole                |      40 | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]      | Since there are already 411 recipes for broccoli.    |    5.0 |    194.8 |    22.0 |
+| Millionaire pound cake                |     120 | [878.3, 63.0, 326.0, 13.0, 20.0, 123.0, 39.0]  | Why a millionaire pound cake? Because it's super rich!|    5.0 |    878.3 |    20.0 |
+| 2000 meatloaf                         |      90 | [267.0, 30.0, 12.0, 12.0, 29.0, 48.0, 2.0]     | Ready, set, cook! Special edition contest entry.      |    5.0 |    267.0 |    29.0 |
+
 
 
 **Distribution of Recipe Protein Content:** 
