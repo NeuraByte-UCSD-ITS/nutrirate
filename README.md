@@ -78,6 +78,7 @@ Here are the first 5 (unique) rows of our cleaned dataset:
 | 2000 meatloaf                        |      90 | [267.0, 30.0, 12.0, 12.0, 29.0, 48.0, 2.0]  | Ready, set, cook! Special edition contest entry      |    5.0 |    267.0 |    29.0 |
 
 
+### Univariate Analysis
 
 **Distribution of Recipe Protein Content:** 
 
@@ -101,6 +102,8 @@ We implemented this plot to get a broader idea of the average rating per recipe.
   frameborder="0"
 ></iframe>
 
+### Bivariate Analysis
+
 **Protein vs. Average Rating Scatter Plot:** 
 
 Considering our previous interests in protein content and average ratings, we wanted to further investigate any correlations with a scatter plot. As you can see below, as protein content increases, average rating decreases when looking at the trendline (meaning we found a negative correlation between the two variables). Though, a majority of the data is from very low protein content that may be skewing our interpretations. This is why we plan on conducting further analysis. 
@@ -111,6 +114,8 @@ Considering our previous interests in protein content and average ratings, we wa
   height="600"
   frameborder="0"
 ></iframe>
+
+### Interesting Aggregates
 
 **Pivot Table: Mean Average Rating by Protein Group & Preparation Time (bin)**
 
