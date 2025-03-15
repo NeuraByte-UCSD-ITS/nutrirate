@@ -76,7 +76,6 @@ In order to properly assess our interests we completed the following data cleani
 | 2000 meatloaf                        |      90 | [267.0, 30.0, 12.0, 12.0, 29.0, 48.0, 2.0]  | Ready, set, cook! Special edition contest entry      |    5.0 |    267.0 |    29.0 |
 
 
-Our cleaned dataframe ended up with 234429 rows and 27 columns. Here are the first 5 rows of ~unique recipes of our cleaned dataframe fo
 
 **Distribution of Recipe Protein Content:** 
 
