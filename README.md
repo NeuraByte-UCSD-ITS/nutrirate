@@ -7,11 +7,11 @@ by Edwin Ruiz & Alexa Fernandez Tobias
 
 ## Introduction
 
-As people have become more health concsious over the years, the protein content in the foods we consume has become a popular topic of discussion. Those that are extremely interested in going to the gym and overall fitness seem to obssess over their protein goals and often eat more nutritionally dense, but ultimately less satisfactory meals. On the other hand, the average person not overly-critical of the foods they consume tend to gravitate to lower-protein meals that (objectively) taste better. We wonder if the ratings of high-protein meals receive lower average ratings because of how they may be associated with nourishing and nutritious, though less appetizing, meals.
+As people have become more health concsious over the years, the protein content in the foods we consume has become a popular topic of discussion. Those that are interested in going to the gym and overall fitness seem to be particularly concerned over their protein goals and often eat more nutritionally dense, but ultimately less satisfactory meals! On the other hand, the average person not overly-critical of the foods they consume tend to gravitate to lower-protein meals that (objectively) taste better. We wonder if the ratings of high-protein meals receive lower average ratings because of how they may be associated with nourishing and nutritious, though less appetizing, meals.
 
 **Dataset Overview** 
 
-This project uses two datasets from Food.com:  
+We used two datasets from Food.com:  
 - **RAW_recipes.csv:** contains recipe details (name, preparation time, nutrition information, etc.). This dataset contains 93782 rows with 10 columns.
 
 | Column             | Description                                                                                                                                                                                       |
@@ -46,13 +46,9 @@ To answer this question, we defined “high” and “low” protein recipes:
 - **High-Protein Recipes:** those with protein values greater than or equal to the median protein content  
 - **Low-Protein Recipes:** those with protein values below the median
 
-**Hypotheses for the Association**  
-- **Null Hypothesis (H₀):** There is no difference in the average user rating (as measured by the “average_rating” column) between high-protein and low-protein recipes
-- **Alternative Hypothesis (H₁):** High-protein recipes receive significantly lower average ratings than low-protein recipes
-
 ---
 
-## Cleaning and EDA
+## Data Cleaning and Exploratory Data Analysis
 
 In order to properly assess our interests we completed the following data cleaning steps:
 
@@ -71,21 +67,13 @@ In order to properly assess our interests we completed the following data cleani
 6. Grouping by recipe id, we computed the average rating per recipe using our merged data. We then merged the resulting dataframe with the original merged_df to add 'average_ratings' as a new column.
 
 Here are the first 5 (unique) rows of our cleaned dataset:
-| name                                 |   minutes | nutrition                                     | description                                                                                                                                                                                                                                                                                                                                                                       |   rating |   calories |   protein |
-|:-------------------------------------|----------:|:----------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------:|-----------:|----------:|
-| 1 brownies in the world    best ever |        40 | [138.4, 10.0, 50.0, 3.0, 3.0, 19.0, 6.0]      | these are the most; chocolatey, moist, rich, dense, fudgy, delicious brownies that you'll ever make.....sereiously! there's no doubt that these will be your fav brownies ever for you can add things to them or make them plain.....either way they're pure heaven!                                                                                                              |        4 |      138.4 |         3 |
-| 1 in canada chocolate chip cookies   |        45 | [595.1, 46.0, 211.0, 22.0, 13.0, 51.0, 26.0]  | this is the recipe that we use at my school cafeteria for chocolate chip cookies. they must be the best chocolate chip cookies i have ever had! if you don't have margarine or don't like it, then just use butter (softened) instead.                                                                                                                                            |        5 |      595.1 |        13 |
-| 412 broccoli casserole               |        40 | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]     | since there are already 411 recipes for broccoli casserole posted to "zaar" ,i decided to call this one  #412 broccoli casserole.i don't think there are any like this one in the database. i based this one on the famous "green bean casserole" from campbell's soup. but i think mine is better since i don't like cream of mushroom soup.submitted to "zaar" on may 28th,2008 |        5 |      194.8 |        22 |
-| millionaire pound cake               |       120 | [878.3, 63.0, 326.0, 13.0, 20.0, 123.0, 39.0] | why a millionaire pound cake?  because it's super rich!  this scrumptious cake is the pride of an elderly belle from jackson, mississippi.  the recipe comes from "the glory of southern cooking" by james villas.                                                                                                                                                                |        5 |      878.3 |        20 |
-| 2000 meatloaf                        |        90 | [267.0, 30.0, 12.0, 12.0, 29.0, 48.0, 2.0]    | ready, set, cook! special edition contest entry: a mediterranean flavor inspired meatloaf dish. featuring: simply potatoes - shredded hash browns, egg, bacon, spinach, red bell pepper, and goat cheese.                                                                                                                                                                         |        5 |      267   |        29 |
-
-| name                                 |     id |   minutes | submitted           |   rating |   avg_rating |   calories  |   sugar   | is_dessert   |   prop_sugar |
-|:-------------------------------------|-------:|----------:|:--------------------|---------:|-----------------:|---------------:|--------------:|:-------------|-------------:|
-| 1 brownies in the world    best ever | 333281 |        40 | 2008-10-27 00:00:00 |        4 |                4 |          138.4 |            50 | True         |    0.361272  |
-| 1 in canada chocolate chip cookies   | 453467 |        45 | 2011-04-11 00:00:00 |        5 |                5 |          595.1 |           211 | False        |    0.354562  |
-| 412 broccoli casserole               | 306168 |        40 | 2008-05-30 00:00:00 |        5 |                5 |          194.8 |             6 | False        |    0.0308008 |
-| millionaire pound cake               | 286009 |       120 | 2008-02-12 00:00:00 |        5 |                5 |          878.3 |           326 | True         |    0.371172  |
-| 2000 meatloaf                        | 475785 |        90 | 2012-03-06 00:00:00 |        5 |                5 |          267   |            12 | False        |    0.0449438 |
+| name                                  | minutes | nutrition                                       | description                                           | rating | calories | protein |
+|---------------------------------------|---------|-------------------------------------------------|-------------------------------------------------------|--------|----------|---------|
+| 1 brownies in the world best ever     | 40      | [138.4, 10.0, 50.0, 3.0, 3.0, 19.0, 6.0]        | these are the most; chocolatey, moist, rich, d...     | 4.0    | 138.4    | 3.0     |
+| 1 in canada chocolate chip cookies    | 45      | [595.1, 46.0, 211.0, 22.0, 13.0, 51.0, 26.0]    | this is the recipe that we use at my school ca...     | 5.0    | 595.1    | 13.0    |
+| 412 broccoli casserole                | 40      | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]       | since there are already 411 recipes for brocco...     | 5.0    | 194.8    | 22.0    |
+| millionaire pound cake                | 120     | [878.3, 63.0, 326.0, 13.0, 20.0, 123.0, 39.0]   | why a millionaire pound cake? because it's su...      | 5.0    | 878.3    | 20.0    |
+| 2000 meatloaf                         | 90      | [267.0, 30.0, 12.0, 12.0, 29.0, 48.0, 2.0]      | ready, set, cook! special edition contest entr...     | 5.0    | 267.0    | 29.0    |
 
 
 **Distribution of Recipe Protein Content:** 
