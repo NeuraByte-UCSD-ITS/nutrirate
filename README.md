@@ -29,6 +29,7 @@ This project uses two datasets from Food.com:
 | `'n_ingredients'`  | Number of ingredients in recipe                                                                                                                                                                   |
 
 
+
 - **interactions.csv:** contains user reviews and ratings for these recipes. This dataset contains 731927 rows with 5 columns. 
 
 | Column        | Description         |
@@ -124,9 +125,9 @@ Considering our previous interests in protein content and average ratings, we wa
 
 ## Assessment of Missingness
 
-In our dataset the 'rating' column has a large number of missing values (15,036 missing). We gathered that people who have neither an exceptionally great nor exceptionally horrible experience with a recipe are less likely to rate a recipe as they have less of motive to do so. This leads us to believe that the 'rating' is NMAR. If it were MAR, the fact that we see so many missing values would purely coincidental with no background information as a motive.
+In our dataset the 'rating' column has a large number of missing values (15,036 missing). We gathered that people who have neither an exceptionally great nor exceptionally horrible experience (a neutral experience) with a recipe are less likely to rate a recipe as they have less of motive to do so. In other words, whether a person rates a recipe may depend on their subjective experience, which is unobserved in the dataset. This leads us to believe that the 'rating' might be NMAR. If it were MCAR, the fact that we see so many missing values would purely coincidental with no background information as a motive.
 
-We now investigate whether the missingness of the 'rating' column depends on other features by performing permutation tests on two different variables:
+However, to determine whether missingness might instead be MAR, we investigate whther the missingness in 'rating' depends on observed features in the dataset. Specifically, we performed a permutation tests on two different variables:
 1. `'protein'` – a feature central to our hypothesis
 2. `'minutes'` – a feature (priori) that we expect may not influence the decision to leave a rating
 
@@ -152,7 +153,7 @@ We collected 1000 simulated mean differences between the two distriubutions by r
   frameborder="0"
 ></iframe>
 
-The **observed statistic** of **2.85** is indicated by the red vertical line on the graph. Since the **p_value** that we found **(0.0)** is < 0.05 (significance level), we **reject the null hypothesis** and accept the alternative. Therefore, we conclude that `'rating'` is MAR, conditional on `'protein'`.
+The **observed statistic** of **2.85** is indicated by the red vertical line on the graph. Since the **p_value** that we found **(0.0)** is < 0.05 (significance level), we **reject the null hypothesis** and accept the alternative. This suggests that `'rating'` is MAR, conditional on `'protein'`.
 
 > Minutes and Rating
 
