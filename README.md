@@ -251,6 +251,7 @@ Seeing as though none of the features included in our model are categorical, we 
   frameborder="0"
 ></iframe>
 
+
 Since ratings range from 1 to 5, an RMSE of ~0.4898 indicates that on average we’re off by about half a rating point, but it might still be substantial on a 1–5 scale if we aim for high accuracy. An R² near zero (0.0006) means the baseline model-linear regression with these features (in their current form) doesn’t capture much of the underlying complexity in how users rate recipes. In conclusion, this baseline model serves as a benchmark as we should explore more sophisticated approaches as there is definitely room for improvement.
 
 Describe your model and state the features in your model, including how many are quantitative, ordinal, and nominal, and how you performed any necessary encodings. Report the performance of your model and whether or not you believe your current model is “good” and why.
@@ -262,7 +263,7 @@ To improve this baseline, we added two new engineered features (since we've util
 - **sugar_to_carb_ratio:** ratio of sugar to carbohydrates (captures relative sweetness profile)
 
 
-We did this to capture "nutritional quality" as this is the basis of our research and interest. We created protein_ratio because even though we already have individual measurements for protein and calories, combining them into a single ratio allows us to capture the protein denisty of a recipe. A higher protein ratio indicates that a recipe delivers more protein per calorie (which is often seen as a mark of higher nutritional quality and may positively influence ratings). Additionally, we also developed sugar_to_carb_ratio, which is the proportion of total carbohydrates that come from sugar which helps asess the quality of carbohydrate content. In nutritional terms, not all carbohydrates are equal, a meal with a high sugar_to_carb_ratio suggests that a larger portion of its carbs consists of simple sugars rather than complex carbs. Since a high simple sugar ratio can be percieved as 'unhealthy', we believe they may negatively impact ratings and thus our reasoning for including it in our final model. 
+We did this to capture "nutritional quality" as this is the basis of our research and interest. We created protein_ratio because even though we already have individual measurements for protein and calories, combining them into a single ratio allows us to capture the protein denisty of a recipe. A higher protein ratio indicates that a recipe delivers more protein per calorie (which is often seen as a mark of higher nutritional quality and may positively influence ratings). Additionally, we also developed sugar_to_carb_ratio, which is the proportion of total carbohydrates that come from sugar which helps assess the quality of carbohydrate content. In nutritional terms, not all carbohydrates are equal, a meal with a high sugar_to_carb_ratio suggests that a larger portion of its carbs consists of simple sugars rather than complex carbs. Since a high simple sugar ratio can be percieved as 'unhealthy', we believe they may negatively impact ratings and thus our reasoning for including it in our final model. 
 
 We then used a **RandomForestRegressor** - a non-linear ensemble method that can capture complex interactions. We tuned key hyperparameters using **GrindSearchCV** and evaluation is done using the same metrics: RMSE, MAE, and R² (again with RMSE being our main metric).
 
@@ -304,3 +305,44 @@ Our analysis set out to determine whether nutritional quality, specifically prot
 We then enhanced our feature set by engineering two new variables—protein_ratio (protein/calories) and sugar_to_carb_ratio (sugar/carbohydrates), and applied a RandomForestRegressor, which substantially improved performance (RMSE: 0.3400, MAE: 0.1442, R²: 0.5183). To explore further enhancements, we implemented a stacking ensemble that combined predictions from RandomForest and Gradient Boosting regressors with a Ridge regressor as the meta-model. The stacking ensemble achieved a slightly better RMSE of 0.3384 and an R² of 0.5228, though its MAE was marginally higher (0.1494). In practical terms, the difference between the RandomForest model and the stacking ensemble is very small—only about a 0.0016 improvement in RMSE and a 0.0045 increase in R². This indicates that both advanced models perform almost equivalently. 
 
 Overall, our results strongly suggest that protein content is a significant factor associated with user ratings; the incorporation of protein-derived features into non-linear models improves predictive accuracy considerably, explaining over 50% of the variance in ratings. While the stacking ensemble offers a minor edge, the increased complexity may not be justified if simplicity and interpretability are prioritized.
+
+## Fairness Analysis
+
+To assess if our final RandomForest model performs “fairly” across the attributes: **Preparation Time** (short vs. long)  
+
+
+We split our final test set into two subgroups, computed the RMSE for each subgroup, and performed a **permutation test** to see if any observed difference in RMSE is statistically significant. We used the difference in RMSE as our test statistic and set our significance level at $\alpha = 0.05$.
+
+1. **Grouping Criterion**  
+   - We split our test set into “short” vs. “long” preparation time based on the median `minutes` in the final test set
+
+   - **Short Group:** `minutes < median`  
+   - **Long Group:** `minutes >= median`
+
+2. **Hypothesis**
+   - **Null Hypothesis:** Our model is fair. It's performance is the same for recipes with short preparation time and recipes with long preparation time. Any differences are due to random chance.
+   - **Alternative Hypothesis:** Our model is unfair. It's performance differs between the two groups, in particular, recipes with long preparation time have a higher RMSE than those with short preparation time.
+3. **Test Statistic**
+   - RMSE:
+       - $\text{Difference} = \text{RMSE}_{\text{long}} - \text{RMSE}_{\text{short}}$
+   - Observed difference: 
+       - $\text{RMSE}_{\text{long}} = 0.3558$ vs. $\text{RMSE}_{\text{short}} = 0.3211$  
+       - $0.3558 − 0.3211 = 0.0347$
+
+4. **Significance Level**  
+   - $\alpha = 0.05$
+
+5. Results
+   - observed difference in RMSE: 0.0347
+   - p-value: 0.0000
+
+<iframe
+  src="assets/residual_plots.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+Since the p-value is extremely small (<0.05), we reject the null hypothesis. The model does appear to have a statistically significant difference in RMSE, performing slightly better for short-prep recipes than long-prep ones.
+
+This suggests that users might see slightly more accurate predictions for recipes with short preparation times. Dependoing on the context, this disparity might be acceptable or would warrant further model adjustments or additional features to improve fairness. 
