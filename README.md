@@ -327,7 +327,7 @@ Compared to our baseline model, we see a dramatic difference in accuracy with pr
 |-----------------------------------|-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|----------|----------|----------|
 | **Baseline Model**                      | calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates, minutes, n_steps, n_ingredients    | StandardScaler, Linear Regression                                                                                  | 0.4898   | 0.3398   | 0.0006   |
 | **Final Model (RandomForest)**    | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, RandomForestRegressor (max_depth: None, n_estimators: 100) with GridSearchCV                         | 0.3400   | 0.1442   | 0.5183   |
-| **Stacking Ensemble (Post-Final)** | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, StackingRegressor with base models: RandomForestRegressor & GradientBoostingRegressor; meta: Ridge   | 0.3384   | 0.1494   | 0.5228   |
+| **Two-Layer Stacked Model (RandomForest + GradientBoosting + Ridge)** | Baseline features + protein_ratio, sugar_to_carb_ratio                                                      | StandardScaler, StackingRegressor with base models: RandomForestRegressor & GradientBoostingRegressor; meta: Ridge   | 0.3384   | 0.1494   | 0.5228   |
 
 The residual plots for the baseline, final, and stacking models illustrate the distribution of prediction errors for each approach. The baseline model shows more errors compared to the final model and stacking ensemble as those are much more narrow.
 
@@ -350,7 +350,7 @@ Overall, our results strongly suggest that protein content is a significant fact
 
 To assess if our final RandomForest model performs “fairly” across the attributes we are testing the variable: **Preparation Time** (short vs. long). We chose this variable because while most of our analysis was focused on nutritional value, one's rating may be largely influenced by how long it takes to prepare. Longer recipes may be more intricate and therefore more enjoyable than the average recipe.
 
-We computed the RMSE and performed a **permutation test** to see if any observed difference in RMSE is statistically significant. We used the difference in RMSE as our test statistic and set our significance level at $\alpha = 0.05$. Our reasoning for using RMSE is because of how it measures the average prediction error in the same units as the target variable allowing us to highlight any potential bias.
+We computed the RMSE and performed a **permutation test** to see if any observed difference in RMSE is statistically significant. We used the difference in RMSE as our test statistic and set our significance level at alpha = 0.05. Our reasoning for using RMSE is because of how it measures the average prediction error in the same units as the target variable allowing us to highlight any potential bias.
 
 1. **Grouping Criterion**  
    - We split our test set into “short” vs. “long” preparation time based on the median `minutes` in the final test set
@@ -368,7 +368,7 @@ We computed the RMSE and performed a **permutation test** to see if any observed
        RMSE(high) = 0.3355 vs. RMSE(low) = 0.3446 
        low - high = 0.0091
 4. **Significance Level**  
-   - alpha = 0.05$
+   - alpha = 0.05
 
 5. **Results**
    - observed difference in RMSE: 0.0347
