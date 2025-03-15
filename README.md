@@ -66,6 +66,16 @@ In order to properly assess our interests we completed the following data cleani
 
 6. Grouping by recipe id, we computed the average rating per recipe using our merged data. We then merged the resulting dataframe with the original merged_df to add 'average_ratings' as a new column.
 
+
+| name                                 | minutes | nutrition                                    | description                                          | rating | calories | protein |
+|:-------------------------------------|--------:|:---------------------------------------------|:-----------------------------------------------------|-------:|---------:|--------:|
+| 1 brownies in the world best ever    |      40 | [138.4, 10.0, 50.0, 3.0, 3.0, 19.0, 6.0]    | These are the most chocolatey, moist, rich brownies  |    4.0 |    138.4 |     3.0 |
+| 1 in Canada chocolate chip cookies   |      45 | [595.1, 46.0, 211.0, 22.0, 13.0, 51.0, 26.0] | This is the recipe that we use at my school cafeteria|    5.0 |    595.1 |    13.0 |
+| 412 broccoli casserole               |      40 | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]   | Since there are already 411 recipes for broccoli    |    5.0 |    194.8 |    22.0 |
+| Millionaire pound cake               |     120 | [878.3, 63.0, 326.0, 13.0, 20.0, 123.0, 39.0]| Why a millionaire pound cake? Because it's super rich!|    5.0 |    878.3 |    20.0 |
+| 2000 meatloaf                        |      90 | [267.0, 30.0, 12.0, 12.0, 29.0, 48.0, 2.0]  | Ready, set, cook! Special edition contest entry      |    5.0 |    267.0 |    29.0 |
+
+
 Our cleaned dataframe ended up with 234429 rows and 27 columns. Here are the first 5 rows of ~unique recipes of our cleaned dataframe for illustration. Since there is a lot of columns for the merged dataframe, we selected the columns that are most relevant to our questions for display. Scroll right to view more columns.
 
 | name                                 |     id |   minutes | submitted           |   rating |   average rating |   calories (#) |   sugar (PDV) | is_dessert   |   prop_sugar |
