@@ -59,7 +59,6 @@ In order to properly assess our interests we completed the following data cleani
     - This allows us to see each rating tied with the approriate recipe
 
 2. Convert the submitted and date columns to datetime datatype (preference).
-
 3. Replace ratings of 0 with NaN. 
     - Ratings of 0 indicate that someone did not rate the food. In order to avoid a drop in mean ratings, we substitute 0 with NaN which avoids all 0's in future calculations. 
 
@@ -68,7 +67,7 @@ In order to properly assess our interests we completed the following data cleani
 
 5. Concat new float columns created from the nutrition (calories, total_fat, sugar, sodium, protein, saturated_fat, and carbohydrates) column to our merged dataframe.
 
-6. Grouping by recipe id, we computed the average rating per recipe using our merged data. We then merged the resulting dataframe with the original merged_df to add 'avg_ratings' as a new column.
+6. Grouping by recipe id, we computed the average rating per recipe using our merged data. We then merged the resulting dataframe with the original merged_df to add 'average_ratings' as a new column.
 
 Here are the first 5 (unique) rows of our cleaned dataset:
 | name                                 |   minutes | nutrition                                     | description                                                                                                                                                                                                                                                                                                                                                                       |   rating |   calories |   protein |
@@ -196,7 +195,16 @@ We want to test whether high-protein recipes get lower ratings, so we do a one-t
 - **Permutation Procedure:** We will randomly shuffle the protein-group labels many times (1,000 permutations) and recalculate the difference each time to build an empirical distribution. 
 - **P-value:** We will calculate the p-value as the proportion of permuted differences that are less than or equal to the observed difference (if the observed difference is negative). 
 
+<iframe
+  src="assets/permutation_test_overall.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
 After performing the permutation test, we reached an observed difference of -0.01699 and a test p-value of 0.0. This leads us to reject the null hypothesis and accept the alternative. 
+
+---
 
 ## Framing a Prediction Problem
 
@@ -209,15 +217,17 @@ Our selected features are:
     These features may influence how people may perceive or rate a recipe (e.g., ease of preparation, gathering of ingridients)
 Our reasoning for not selecting columns such as rating or review is because that is not information we would not have on hand if a rating was yet to be made. All the features we selected is information we would have whether or not someone has already left a rating. 
 
-**Evaluation Metrics** 
+**Evaluation Metrics**
+
 We used the following metrics to measure our progress:
    - **RMSE (Root Mean Squared Error):** Emphasizes large errors by squaring them before averaging, thus giving a sense of how off the model can be in “worst-case” scenarios  
    - **MAE (Mean Absolute Error):** Straightforward measure of average absolute deviation from true ratings  
    - **R² (Coefficient of Determination):** Indicates how much of the variance in average ratings is explained by the features
-Though our main metric is **RMSE** as ...
+
+Though our main metric is **RMSE.** Our reasoning is because large errors are penalized more than they would be with just MAE. MAE treats all errors equally, but because we're dealing with ratings that implies that an error of being off by an average of <0.4 is the same as an error of being off by an average of 3, which is clearly not the case.
 
 **Why This Matters**
-- Predicting **average_rating** can guide recipe creators to design or modify recipes that are more likely to garner higher user satisfaction. It also builds upon the earlier hypothesis test that showed a slight negative relationship between high protein and ratings.
+Predicting **average_rating** can guide recipe creators to design or modify recipes that are more likely to garner higher user satisfaction. It also builds upon the earlier hypothesis test that showed a slight negative relationship between high protein and ratings.
 
 Moving forward, we wanted to visualize correlations between the features and the target using a correlation matrix. 
 
@@ -230,14 +240,22 @@ Moving forward, we wanted to visualize correlations between the features and the
 
 From the correlation matrix, we see that many of the nutritional features (e.g., calories, total_fat, sugar, and carbohydrates) are highly correlated with one another, whereas average_rating does not show a strong linear correlation with any single feature. This entails that a straightforward linear model might not be sufficient to capture how these recipe attributes affect user ratings, which suggests that we need more advanced modeling and feature engineering.
 
+---
+
 ## Baseline Model
 
 Baseline Approach:
-- model: Linear Regression
+- Model: Linear Regression
 - Data Processing: Appeal **StandardScaler** to all numeric features.
 - Data Split: 80% training, 20% test, ensuring we can asses generalization
-For our features, we decided to use all nutritional values and recipe properties previously mentioned. These all consist of quantitative values: calories (continuous), total_fat (continuous), sugar (continuous), sodium (continuous), protein (continuous), saturated_fat (continuous), carbohydrates (continuous), minutes (continuous), n_steps (discrete), n_ingridients (discrete)
-Seeing as though none of the features included in our model are categorical, we did not have to perform any encodings.
+
+For our features, we decided to use all nutritional values and recipe properties previously mentioned. These all consist of quantitative features: 
+
+Continuous Quantitative: calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates, minutes. 
+
+Discrete Quantitative: n_steps, n_ingredients
+
+Seeing as though none of the features included in our model are categorical (and therefore none are ordinal or nominal), we did not have to perform any encodings.
 
 **Baseline Performance Results**  
 - **RMSE:** ~0.4898  
@@ -252,9 +270,9 @@ Seeing as though none of the features included in our model are categorical, we 
 ></iframe>
 
 
-Since ratings range from 1 to 5, an RMSE of ~0.4898 indicates that on average we’re off by about half a rating point, but it might still be substantial on a 1–5 scale if we aim for high accuracy. An R² near zero (0.0006) means the baseline model-linear regression with these features (in their current form) doesn’t capture much of the underlying complexity in how users rate recipes. In conclusion, this baseline model serves as a benchmark as we should explore more sophisticated approaches as there is definitely room for improvement.
+Since ratings range from 1 to 5, an RMSE of ~0.4898 indicates that on average we’re off by about half a rating point, but it might still be substantial on a 1–5 scale if we aim for high accuracy. An R² near zero (0.0006) means the baseline model-linear regression with these features (in their current form) doesn’t capture much of the underlying complexity in how users rate recipes. This might be due to non-linear interactions between nutritional content and user preferences that linear regression cannot model well. In conclusion, this baseline model serves as a benchmark as we should explore more sophisticated approaches as there is definitely room for improvement.
 
-Describe your model and state the features in your model, including how many are quantitative, ordinal, and nominal, and how you performed any necessary encodings. Report the performance of your model and whether or not you believe your current model is “good” and why.
+---
 
 ## Final Model
 
@@ -262,10 +280,11 @@ To improve this baseline, we added two new engineered features (since we've util
 - **protein_ratio** ratio of protein to calories (captures nutritional density)
 - **sugar_to_carb_ratio:** ratio of sugar to carbohydrates (captures relative sweetness profile)
 
-
 We did this to capture "nutritional quality" as this is the basis of our research and interest. We created protein_ratio because even though we already have individual measurements for protein and calories, combining them into a single ratio allows us to capture the protein denisty of a recipe. A higher protein ratio indicates that a recipe delivers more protein per calorie (which is often seen as a mark of higher nutritional quality and may positively influence ratings). Additionally, we also developed sugar_to_carb_ratio, which is the proportion of total carbohydrates that come from sugar which helps assess the quality of carbohydrate content. In nutritional terms, not all carbohydrates are equal, a meal with a high sugar_to_carb_ratio suggests that a larger portion of its carbs consists of simple sugars rather than complex carbs. Since a high simple sugar ratio can be percieved as 'unhealthy', we believe they may negatively impact ratings and thus our reasoning for including it in our final model. 
 
-We then used a **RandomForestRegressor** - a non-linear ensemble method that can capture complex interactions. We tuned key hyperparameters using **GrindSearchCV** and evaluation is done using the same metrics: RMSE, MAE, and R² (again with RMSE being our main metric).
+We then used a **RandomForestRegressor** - a non-linear ensemble method that can capture complex interactions. User ratings may depend on interactions between ingredients instead of their independent effects. For example, people sometimes have different perspectives when it comes to the nutritional content depending on their goals so a high protein meal might be positive for a high-caloric meal, but negative for a low-caloric meal. A non-linear model like RandomForest can highlight these interactions, though Linear Regression is unable to do so.
+
+We tuned key hyperparameters using **GridSearchCV** and evaluation is done using the same metrics as above. We tested values for n_estimators (50, 100) and max_depth (None, 10, 20) using GridSearchCV with 5-fold cross-validation, selecting the best model based on RMSE
 
 Final model training set size: 185321 rows
 Final model test set size: 46331 rows
@@ -298,20 +317,19 @@ Compared to our baseline model, we see a dramatic difference in accuracy with pr
   frameborder="0"
 ></iframe>
 
-**Conclusion**
-
 Our analysis set out to determine whether nutritional quality, specifically protein content, is associated with user ratings on Food.com. We began by comparing high‐protein and low‐protein recipes using a permutation test, which rejected the null hypothesis (p-value = 0.0) where we were able to see a trend of high-protein receiving slightly lower ratings. Although the absolute difference in ratings was modest, this finding provided the rational for further predictive modeling. We first began by building a baseline Linear Regression model using 10 core nutritional and recipe features that yielded an RMSE of 0.4898, an MAE of 0.2298, and an R² near zero. This implied that a simple linear approach could not capture the complex factors influencing user ratings. 
 
 We then enhanced our feature set by engineering two new variables—protein_ratio (protein/calories) and sugar_to_carb_ratio (sugar/carbohydrates), and applied a RandomForestRegressor, which substantially improved performance (RMSE: 0.3400, MAE: 0.1442, R²: 0.5183). To explore further enhancements, we implemented a stacking ensemble that combined predictions from RandomForest and Gradient Boosting regressors with a Ridge regressor as the meta-model. The stacking ensemble achieved a slightly better RMSE of 0.3384 and an R² of 0.5228, though its MAE was marginally higher (0.1494). In practical terms, the difference between the RandomForest model and the stacking ensemble is very small—only about a 0.0016 improvement in RMSE and a 0.0045 increase in R². This indicates that both advanced models perform almost equivalently. 
 
 Overall, our results strongly suggest that protein content is a significant factor associated with user ratings; the incorporation of protein-derived features into non-linear models improves predictive accuracy considerably, explaining over 50% of the variance in ratings. While the stacking ensemble offers a minor edge, the increased complexity may not be justified if simplicity and interpretability are prioritized.
 
+---
+
 ## Fairness Analysis
 
-To assess if our final RandomForest model performs “fairly” across the attributes: **Preparation Time** (short vs. long)  
+To assess if our final RandomForest model performs “fairly” across the attributes we are testing the variable: **Preparation Time** (short vs. long). We chose this variable because while most of our analysis was focused on nutritional value, one's rating may be largely influenced by how long it takes to prepare. Longer recipes may be more intricate and therefore more enjoyable than the average recipe.
 
-
-We split our final test set into two subgroups, computed the RMSE for each subgroup, and performed a **permutation test** to see if any observed difference in RMSE is statistically significant. We used the difference in RMSE as our test statistic and set our significance level at $\alpha = 0.05$.
+We computed the RMSE and performed a **permutation test** to see if any observed difference in RMSE is statistically significant. We used the difference in RMSE as our test statistic and set our significance level at $\alpha = 0.05$. Our reasoning for using RMSE is because of how it measures the average prediction error in the same units as the target variable allowing us to highlight any potential bias.
 
 1. **Grouping Criterion**  
    - We split our test set into “short” vs. “long” preparation time based on the median `minutes` in the final test set
@@ -324,15 +342,14 @@ We split our final test set into two subgroups, computed the RMSE for each subgr
    - **Alternative Hypothesis:** Our model is unfair. It's performance differs between the two groups, in particular, recipes with long preparation time have a higher RMSE than those with short preparation time.
 3. **Test Statistic**
    - RMSE:
-       - $\text{Difference} = \text{RMSE}_{\text{long}} - \text{RMSE}_{\text{short}}$
+      Difference = RMSE(high) - RMSE(low)
    - Observed difference: 
-       - $\text{RMSE}_{\text{long}} = 0.3558$ vs. $\text{RMSE}_{\text{short}} = 0.3211$  
-       - $0.3558 − 0.3211 = 0.0347$
-
+       RMSE(high) = 0.3355 vs. RMSE(low) = 0.3446 
+       low - high = 0.0091
 4. **Significance Level**  
-   - $\alpha = 0.05$
+   - alpha = 0.05$
 
-5. Results
+5. **Results**
    - observed difference in RMSE: 0.0347
    - p-value: 0.0000
 
@@ -345,4 +362,4 @@ We split our final test set into two subgroups, computed the RMSE for each subgr
 
 Since the p-value is extremely small (<0.05), we reject the null hypothesis. The model does appear to have a statistically significant difference in RMSE, performing slightly better for short-prep recipes than long-prep ones.
 
-This suggests that users might see slightly more accurate predictions for recipes with short preparation times. Dependoing on the context, this disparity might be acceptable or would warrant further model adjustments or additional features to improve fairness. 
+This suggests that users might see slightly more accurate predictions for recipes with short preparation times. Depending on the context, this disparity might be acceptable, or would warrant further model adjustments and additional features to improve fairness. 
