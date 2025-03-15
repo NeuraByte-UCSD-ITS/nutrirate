@@ -113,6 +113,10 @@ Considering our previous interests in protein content and average ratings, we wa
 ></iframe>
 
 Pivot Table: Mean Average Rating by Protein Group & Preparation Time (bin):
+
+Our pivot table is the results of grouping the recipes by their protein group (high versus low) and further categorizing them into preparation time bins (short, medium, long) to calculate the mean average rating for each combination. This pivot table is significant because it allows us to examine the interplay between nutritional quality and preparation time on user ratings, which reveals subtle patterns that can inform recipe development and further analysis.
+
+
 | protein_group   |   short |   medium |    long |
 |:----------------|--------:|---------:|--------:|
 | high            | 4.68556 |  4.67607 | 4.64813 |
