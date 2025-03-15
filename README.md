@@ -228,6 +228,7 @@ We used the following metrics to measure our progress:
 Though our main metric is **RMSE.** Our reasoning is because large errors are penalized more than they would be with just MAE. MAE treats all errors equally, but because we're dealing with ratings that implies that an error of being off by an average of <0.4 is the same as an error of being off by an average of 3, which is clearly not the case.
 
 **Why This Matters**
+
 Predicting **average_rating** can guide recipe creators to design or modify recipes that are more likely to garner higher user satisfaction. It also builds upon the earlier hypothesis test that showed a slight negative relationship between high protein and ratings.
 
 Moving forward, we wanted to visualize correlations between the features and the target using a correlation matrix. 
@@ -252,9 +253,9 @@ Baseline Approach:
 
 For our features, we decided to use all nutritional values and recipe properties previously mentioned. These all consist of quantitative features: 
 
-Continuous Quantitative: calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates, minutes. 
+- **Continuous Quantitative:** calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates, minutes. 
 
-Discrete Quantitative: n_steps, n_ingredients
+- **Discrete Quantitative:** n_steps, n_ingredients
 
 Seeing as though none of the features included in our model are categorical (and therefore none are ordinal or nominal), we did not have to perform any encodings.
 
@@ -287,13 +288,18 @@ We then used a **RandomForestRegressor** - a non-linear ensemble method that can
 
 We tuned key hyperparameters using **GridSearchCV** and evaluation is done using the same metrics as above. We tested values for n_estimators (50, 100) and max_depth (None, 10, 20) using GridSearchCV with 5-fold cross-validation, selecting the best model based on RMSE
 
-Final model training set size: 185321 rows
-Final model test set size: 46331 rows
-Best hyperparameters: {'model__max_depth': None, 'model__n_estimators': 100}
+**Final model training set size:** 185321 rows
+
+**Final model test set size:** 46331 rows
+
+**Best hyperparameters:** {'model__max_depth': None, 'model__n_estimators': 100}
 
 Final Model Performance:
+
 RMSE: 0.3400
+
 MAE: 0.1442
+
 R²: 0.5183
 
 <iframe
@@ -355,7 +361,7 @@ We computed the RMSE and performed a **permutation test** to see if any observed
    - p-value: 0.0000
 
 <iframe
-  src="assets/residual_plots.html"
+  src="assets/fairness_prep_time.html"
   width="800"
   height="600"
   frameborder="0"
