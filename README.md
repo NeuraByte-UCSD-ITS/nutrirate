@@ -10,6 +10,7 @@ by Edwin Ruiz & Alexa Fernandez Tobias
 As people have become more health concsious over the years, the protein content in the foods we consume has become a popular topic of discussion. Those that are extremely interested in going to the gym and overall fitness seem to obssess over their protein goals and often eat more nutritionally dense, but ultimately less satisfactory meals. On the other hand, the average person not overly-critical of the foods they consume tend to gravitate to lower-protein meals that (objectively) taste better. We wonder if the ratings of high-protein meals receive lower average ratings because of how they may be associated with nourishing and nutritious, though less appetizing, meals.
 
 **Dataset Overview** 
+
 This project uses two datasets from Food.com:  
 - **RAW_recipes.csv:** contains recipe details (name, preparation time, nutrition information, etc.). This dataset contains 93782 rows with 10 columns.
 
@@ -27,7 +28,6 @@ This project uses two datasets from Food.com:
 | `'description'`    | User-provided description                                                                                                                                                                         |
 | `'ingredients'`    | Text for recipe ingredients                                                                                                                                                                       |
 | `'n_ingredients'`  | Number of ingredients in recipe                                                                                                                                                                   |
-
 
 
 - **interactions.csv:** contains user reviews and ratings for these recipes. This dataset contains 731927 rows with 5 columns. 
@@ -271,7 +271,7 @@ Seeing as though none of the features included in our model are categorical (and
 ></iframe>
 
 
-Since ratings range from 1 to 5, an RMSE of ~0.4898 indicates that on average we’re off by about half a rating point, but it might still be substantial on a 1–5 scale if we aim for high accuracy. An R² near zero (0.0006) means the baseline model-linear regression with these features (in their current form) doesn’t capture much of the underlying complexity in how users rate recipes. This might be due to non-linear interactions between nutritional content and user preferences that linear regression cannot model well. In conclusion, this baseline model serves as a benchmark as we should explore more sophisticated approaches as there is definitely room for improvement.
+Since ratings range from 1 to 5, an RMSE of ~0.4898 indicates that on average we’re off by about half a rating point, but it might still be substantial on a 1–5 scale if we aim for high accuracy. An R² near zero (0.0006) means the baseline model-linear regression with these features (in their current form) doesn’t capture much of the underlying complexity in how users rate recipes. This might be due to non-linear interactions between nutritional content and user preferences that linear regression cannot model well. In conclusion, this baseline model serves as a benchmark; we should explore more sophisticated approaches since there is definitely room for improvement.
 
 ---
 
